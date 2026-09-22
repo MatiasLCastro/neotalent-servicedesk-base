@@ -20,6 +20,16 @@ test("cargarTickets devuelve ok:false cuando el HTTP falla", async () => {
   assert.match(resultado.error, /404/);
 });
 
+test("cargarTickets devuelve ok:false cuando el JSON no es un array", async () => {
+  const fetchFalso = async () => ({
+    ok: true,
+    json: async () => ({}),
+  });
+  const resultado = await cargarTickets(fetchFalso);
+  assert.equal(resultado.ok, false);
+  assert.equal(resultado.error, "formato inesperado");
+});
+
 test("cargarTickets devuelve ok:false cuando el fetch rechaza (red caída)", async () => {
   const fetchFalso = async () => {
     throw new Error("network down");

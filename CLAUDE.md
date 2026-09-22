@@ -26,6 +26,11 @@ Plain HTML + CSS + JS. **No build step, no bundler, no npm, no `package.json`, n
 `node_modules/` — ever.** `index.html` opens directly in a browser. Do not suggest adding one
 of these; it's a deliberate, constitution-level constraint (Art. 1), not an oversight.
 
+Note: double-clicking `index.html` (a `file://` URL) breaks `fetch("data/tickets.json")` in
+every major browser — `file://` is an opaque origin and `fetch` gets blocked. Serve the
+directory instead, e.g. `python3 -m http.server 8000` (ships with Python, nothing to install
+— doesn't violate Art. 1) then open `http://localhost:8000`.
+
 ## Testing
 
 `js/utils/**` and `js/components/**` are plain, DOM-free/fetch-free-except-injected functions,
@@ -64,7 +69,7 @@ using this pattern for new files in either directory — don't switch to ES modu
 
 ## Linting
 
-`eslint.config.js` is checked in, but ESLint itself is **not** — installing it via
+`eslint.config.mjs` is checked in, but ESLint itself is **not** — installing it via
 `package.json`/`node_modules` would violate Art. 1. Run it with a globally installed ESLint
 (`npm install -g eslint`, once, outside this repo), then `eslint .` from the repo root.
 

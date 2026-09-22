@@ -102,6 +102,7 @@ async function actualizarDatos() {
   }
   ocultarError();
   state.tickets = resultado.tickets;
+  renderBandeja();
   if (state.vista === "ficha" && state.ticketSeleccionado) {
     const sigueExistiendo = state.tickets.some((t) => t.id === state.ticketSeleccionado);
     if (sigueExistiendo) {
@@ -109,8 +110,6 @@ async function actualizarDatos() {
     } else {
       volverABandeja();
     }
-  } else {
-    renderBandeja();
   }
 }
 

@@ -24,3 +24,13 @@ test("la barra con más conteo llega al 100% de ancho", () => {
   assert.match(html, /width: 100%/);
   assert.match(html, /width: 50%/);
 });
+
+test("escapa HTML en las etiquetas de las barras", () => {
+  const html = renderPanelMetricas({
+    porSistema: { "<script>alert(1)</script>": 2 },
+    porZona: {},
+    porEstado: {},
+  });
+  assert.ok(!html.includes("<script>alert(1)</script>"));
+  assert.match(html, /&lt;script&gt;/);
+});

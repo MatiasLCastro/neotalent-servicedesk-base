@@ -1,3 +1,11 @@
+// Duplicada intencionalmente en cada componente (ver docs/constitution.md /
+// decisión del proyecto: demasiado pequeña para justificar un módulo
+// compartido). En el navegador, ambas copias son declaraciones de función de
+// nivel superior en un <script> clásico, así que ambas terminan asignando
+// window.escaparHtml — no confíes en ese global, usa siempre la referencia
+// local de este archivo. Si editas esta función, replica el cambio en el
+// otro archivo que la define (listaTickets.js) para que sigan siendo
+// idénticas byte a byte.
 function escaparHtml(texto) {
   return String(texto)
     .replace(/&/g, "&amp;")

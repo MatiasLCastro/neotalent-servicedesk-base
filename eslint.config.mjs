@@ -15,6 +15,8 @@ export default [
         module: "writable",
         require: "readonly",
         console: "readonly",
+        Utils: "readonly",
+        Components: "readonly",
       },
     },
     rules: {
