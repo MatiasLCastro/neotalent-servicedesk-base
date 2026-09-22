@@ -1,14 +1,55 @@
-// Lógica de la interfaz — se construye en la Sesión 3, Fase 3 (Desarrollo):
-// listar tickets, filtrar, ficha de detalle, clasificación de prioridad/categoría.
-// De momento solo confirma que el dataset carga bien.
+// js/app.js
+const state = {
+  tickets: [],
+  filtro: "todos",
+  vista: "bandeja",
+  ticketSeleccionado: null,
+};
 
-fetch("data/tickets.json")
-  .then((r) => r.json())
-  .then((tickets) => {
-    document.getElementById("conteo").textContent =
-      `${tickets.length} tickets cargados, todavía sin clasificar.`;
-  })
-  .catch(() => {
-    document.getElementById("conteo").textContent =
-      "No se ha podido cargar data/tickets.json.";
+const el = {
+  listaTickets: document.getElementById("lista-tickets"),
+  panelMetricas: document.getElementById("panel-metricas"),
+  filtroEstado: document.getElementById("filtro-estado"),
+  errorMensaje: document.getElementById("error-mensaje"),
+  vistaBandeja: document.getElementById("vista-bandeja"),
+  vistaFicha: document.getElementById("vista-ficha"),
+  fichaContenido: document.getElementById("ficha-contenido"),
+};
+
+function mostrarError(mensaje) {
+  el.errorMensaje.textContent = mensaje;
+  el.errorMensaje.hidden = false;
+}
+
+function ocultarError() {
+  el.errorMensaje.hidden = true;
+}
+
+function renderBandeja() {
+  const filtrados = Utils.filtrarPorEstado(state.tickets, state.filtro);
+  el.listaTickets.innerHTML = Components.renderListaTickets(filtrados);
+  el.panelMetricas.innerHTML = Components.renderPanelMetricas({
+    porSistema: Utils.contarPorCampo(filtrados, "sistema_afectado"),
+    porZona: Utils.contarPorCampo(filtrados, "zona"),
+    porEstado: Utils.contarPorCampo(filtrados, "estado"),
   });
+}
+
+el.filtroEstado.addEventListener("change", (evento) => {
+  state.filtro = evento.target.value;
+  renderBandeja();
+});
+
+async function iniciar() {
+  const resultado = await Utils.cargarTickets(fetch);
+  if (!resultado.ok) {
+    mostrarError(`No se ha podido cargar data/tickets.json (${resultado.error}).`);
+    el.listaTickets.innerHTML = "";
+    return;
+  }
+  ocultarError();
+  state.tickets = resultado.tickets;
+  renderBandeja();
+}
+
+iniciar();
