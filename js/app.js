@@ -66,6 +66,34 @@ el.fichaContenido.addEventListener("click", (evento) => {
   if (evento.target.closest(".btn-volver")) volverABandeja();
 });
 
+function mostrarFallbackClasificar(texto) {
+  const contenedor = document.getElementById("clasificar-fallback");
+  const textarea = document.getElementById("clasificar-textarea");
+  textarea.value = texto;
+  contenedor.hidden = false;
+  textarea.select();
+}
+
+async function copiarPromptClasificacion(id) {
+  const ticket = state.tickets.find((t) => t.id === id);
+  if (!ticket) return;
+  const prompt = Utils.generarPromptClasificacion(ticket);
+  if (!navigator.clipboard) {
+    mostrarFallbackClasificar(prompt);
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(prompt);
+  } catch {
+    mostrarFallbackClasificar(prompt);
+  }
+}
+
+el.fichaContenido.addEventListener("click", (evento) => {
+  const boton = evento.target.closest(".btn-clasificar");
+  if (boton) copiarPromptClasificacion(boton.dataset.ticketId);
+});
+
 async function iniciar() {
   const resultado = await Utils.cargarTickets(fetch);
   if (!resultado.ok) {
