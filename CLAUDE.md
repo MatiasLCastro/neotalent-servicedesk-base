@@ -62,6 +62,12 @@ return an HTML string — never touch `document` themselves) attach to `window.C
 using this pattern for new files in either directory — don't switch to ES modules or `import`/
 `export`, which would need a bundler or `type="module"` script tags this project doesn't use.
 
+## Linting
+
+`eslint.config.js` is checked in, but ESLint itself is **not** — installing it via
+`package.json`/`node_modules` would violate Art. 1. Run it with a globally installed ESLint
+(`npm install -g eslint`, once, outside this repo), then `eslint .` from the repo root.
+
 ## Classification workflow (no LLM calls from the browser)
 
 Ticket priority/category are never fetched from a live model in the browser (constitution
