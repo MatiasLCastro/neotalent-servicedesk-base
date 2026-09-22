@@ -94,6 +94,28 @@ el.fichaContenido.addEventListener("click", (evento) => {
   if (boton) copiarPromptClasificacion(boton.dataset.ticketId);
 });
 
+async function actualizarDatos() {
+  const resultado = await Utils.cargarTickets(fetch);
+  if (!resultado.ok) {
+    mostrarError(`No se ha podido actualizar data/tickets.json (${resultado.error}).`);
+    return;
+  }
+  ocultarError();
+  state.tickets = resultado.tickets;
+  if (state.vista === "ficha" && state.ticketSeleccionado) {
+    const sigueExistiendo = state.tickets.some((t) => t.id === state.ticketSeleccionado);
+    if (sigueExistiendo) {
+      mostrarFicha(state.ticketSeleccionado);
+    } else {
+      volverABandeja();
+    }
+  } else {
+    renderBandeja();
+  }
+}
+
+document.getElementById("btn-actualizar").addEventListener("click", actualizarDatos);
+
 async function iniciar() {
   const resultado = await Utils.cargarTickets(fetch);
   if (!resultado.ok) {
