@@ -40,6 +40,32 @@ el.filtroEstado.addEventListener("change", (evento) => {
   renderBandeja();
 });
 
+function mostrarFicha(id) {
+  const ticket = state.tickets.find((t) => t.id === id);
+  if (!ticket) return;
+  state.vista = "ficha";
+  state.ticketSeleccionado = id;
+  el.fichaContenido.innerHTML = Components.renderFichaTicket(ticket);
+  el.vistaBandeja.hidden = true;
+  el.vistaFicha.hidden = false;
+}
+
+function volverABandeja() {
+  state.vista = "bandeja";
+  state.ticketSeleccionado = null;
+  el.vistaFicha.hidden = true;
+  el.vistaBandeja.hidden = false;
+}
+
+el.listaTickets.addEventListener("click", (evento) => {
+  const fila = evento.target.closest(".ticket-row");
+  if (fila) mostrarFicha(fila.dataset.ticketId);
+});
+
+el.fichaContenido.addEventListener("click", (evento) => {
+  if (evento.target.closest(".btn-volver")) volverABandeja();
+});
+
 async function iniciar() {
   const resultado = await Utils.cargarTickets(fetch);
   if (!resultado.ok) {
