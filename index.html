@@ -7,17 +7,27 @@
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-  <!--
-    Esto es un placeholder, no la app. La interfaz real (lista de tickets, ficha,
-    clasificación, métricas) se construye en la Sesión 3, Fase 3 (Desarrollo) —
-    ver docs/spec.md, que sale de la Fase 1.
-    Este stub solo comprueba que data/tickets.json es accesible desde el navegador.
-  -->
+  <h1>Mini Service Desk</h1>
+
+  <p id="error-mensaje" class="error-mensaje" hidden></p>
+
   <main>
-    <h1>Mini Service Desk</h1>
-    <p class="estado">Aún sin construir — llegará en la Sesión 3.</p>
-    <p id="conteo">Cargando dataset…</p>
+    <section id="vista-bandeja" class="bandeja">
+      <header class="bandeja-cabecera">
+        <h2>Todas las incidencias</h2>
+        <select id="filtro-estado" aria-label="Filtrar por estado">
+          <option value="todos">Todos</option>
+          <option value="abierto">Abiertos</option>
+          <option value="cerrado">Cerrados</option>
+        </select>
+      </header>
+      <div id="lista-tickets">Cargando tickets…</div>
+    </section>
   </main>
+
+  <script src="js/utils/tickets.js"></script>
+  <script src="js/utils/datos.js"></script>
+  <script src="js/components/listaTickets.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

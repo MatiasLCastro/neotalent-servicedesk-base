@@ -1,13 +1,93 @@
-/* Estilos de la interfaz — se construyen en la Sesión 3, Fase 3 (Desarrollo).
-   De momento solo el mínimo para que el placeholder de index.html se lea bien. */
-
 body {
   font-family: system-ui, sans-serif;
-  max-width: 640px;
-  margin: 4rem auto;
-  color: #1a1a2e;
+  max-width: 1080px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  color: #1a1a1a;
+  background: #eeece7;
 }
 
-.estado {
-  color: #6b6b80;
+.error-mensaje {
+  background: #fde2e2;
+  color: #7a1f1f;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+}
+
+.bandeja {
+  border: 2px solid #1a1a1a;
+  border-radius: 10px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.bandeja-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.9rem 1.25rem;
+  border-bottom: 2px solid #1a1a1a;
+}
+.bandeja-cabecera h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+.bandeja-cabecera select {
+  border: 2px solid #1a1a1a;
+  border-radius: 6px;
+  padding: 0.35rem 0.6rem;
+  font: inherit;
+  font-size: 0.8rem;
+}
+
+.ticket-row {
+  display: grid;
+  grid-template-columns: 90px 1fr 170px 170px 90px 90px;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid #eee;
+  font-size: 0.85rem;
+}
+.ticket-row:hover {
+  background: #fdf3ec;
+}
+.ticket-row--cabecera {
+  font-size: 0.7rem;
+  color: #888;
+  border-bottom: 1.5px solid #ddd;
+}
+.ticket-row--cabecera:hover {
+  background: none;
+}
+.ticket-id {
+  font-weight: 700;
+}
+
+.ticket-estado {
+  font-size: 0.7rem;
+  padding: 0.1rem 0.55rem;
+  border: 1.5px solid #1a1a1a;
+  border-radius: 999px;
+}
+.ticket-estado--cerrado {
+  border-color: #999;
+  color: #999;
+}
+
+.lista-vacia {
+  padding: 1rem 1.25rem;
+  color: #999;
+}
+
+@media (max-width: 720px) {
+  .ticket-row {
+    grid-template-columns: 80px 1fr 80px;
+  }
+  .ticket-zona,
+  .ticket-sistema,
+  .ticket-fecha,
+  .ticket-row--cabecera span:nth-child(n + 3):nth-child(-n + 5) {
+    display: none;
+  }
 }

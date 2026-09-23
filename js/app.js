@@ -1,14 +1,34 @@
-// Lógica de la interfaz — se construye en la Sesión 3, Fase 3 (Desarrollo):
-// listar tickets, filtrar, ficha de detalle, clasificación de prioridad/categoría.
-// De momento solo confirma que el dataset carga bien.
+const state = {
+  tickets: [],
+  filtro: "todos",
+};
 
-fetch("data/tickets.json")
-  .then((r) => r.json())
-  .then((tickets) => {
-    document.getElementById("conteo").textContent =
-      `${tickets.length} tickets cargados, todavía sin clasificar.`;
-  })
-  .catch(() => {
-    document.getElementById("conteo").textContent =
-      "No se ha podido cargar data/tickets.json.";
-  });
+const el = {
+  listaTickets: document.getElementById("lista-tickets"),
+  filtroEstado: document.getElementById("filtro-estado"),
+  errorMensaje: document.getElementById("error-mensaje"),
+};
+
+function renderBandeja() {
+  const filtrados = Utils.filtrarPorEstado(state.tickets, state.filtro);
+  el.listaTickets.innerHTML = Components.renderListaTickets(filtrados);
+}
+
+el.filtroEstado.addEventListener("change", (evento) => {
+  state.filtro = evento.target.value;
+  renderBandeja();
+});
+
+async function iniciar() {
+  const resultado = await Utils.cargarTickets(fetch);
+  if (!resultado.ok) {
+    el.errorMensaje.textContent = `No se ha podido cargar data/tickets.json (${resultado.error}).`;
+    el.errorMensaje.hidden = false;
+    el.listaTickets.innerHTML = "";
+    return;
+  }
+  state.tickets = resultado.tickets;
+  renderBandeja();
+}
+
+iniciar();
