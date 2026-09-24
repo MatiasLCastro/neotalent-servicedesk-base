@@ -1,10 +1,17 @@
 body {
   font-family: system-ui, sans-serif;
-  max-width: 1080px;
+  max-width: 960px;
   margin: 2rem auto;
   padding: 0 1rem;
-  color: #1a1a1a;
-  background: #eeece7;
+  color: #1a1a2e;
+  background: #e6f2fb;
+}
+
+.cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
 }
 
 .error-mensaje {
@@ -14,80 +21,104 @@ body {
   border-radius: 6px;
 }
 
-.bandeja {
-  border: 2px solid #1a1a1a;
-  border-radius: 10px;
-  background: #fff;
-  overflow: hidden;
-}
-
-.bandeja-cabecera {
+.lista-tickets {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.9rem 1.25rem;
-  border-bottom: 2px solid #1a1a1a;
-}
-.bandeja-cabecera h2 {
-  margin: 0;
-  font-size: 1rem;
-}
-.bandeja-cabecera select {
-  border: 2px solid #1a1a1a;
-  border-radius: 6px;
-  padding: 0.35rem 0.6rem;
-  font: inherit;
-  font-size: 0.8rem;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
 }
 
 .ticket-row {
   display: grid;
-  grid-template-columns: 90px 1fr 170px 170px 90px 90px;
+  grid-template-columns: 90px 90px 1fr 160px 140px 90px;
   gap: 0.75rem;
   align-items: center;
-  padding: 0.75rem 1.25rem;
-  border-bottom: 1px solid #eee;
-  font-size: 0.85rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
 }
 .ticket-row:hover {
-  background: #fdf3ec;
-}
-.ticket-row--cabecera {
-  font-size: 0.7rem;
-  color: #888;
-  border-bottom: 1.5px solid #ddd;
-}
-.ticket-row--cabecera:hover {
-  background: none;
-}
-.ticket-id {
-  font-weight: 700;
+  background: #f4f4f8;
 }
 
 .ticket-estado {
-  font-size: 0.7rem;
-  padding: 0.1rem 0.55rem;
-  border: 1.5px solid #1a1a1a;
+  font-size: 0.8rem;
+  padding: 0.15rem 0.5rem;
   border-radius: 999px;
+  text-align: center;
+}
+.ticket-estado--abierto {
+  background: #fdecd2;
+  color: #8a5a00;
 }
 .ticket-estado--cerrado {
-  border-color: #999;
-  color: #999;
+  background: #dff3e3;
+  color: #226b3a;
 }
 
-.lista-vacia {
-  padding: 1rem 1.25rem;
-  color: #999;
+.ficha-ticket {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1.5rem;
 }
 
-@media (max-width: 720px) {
-  .ticket-row {
-    grid-template-columns: 80px 1fr 80px;
-  }
-  .ticket-zona,
-  .ticket-sistema,
-  .ticket-fecha,
-  .ticket-row--cabecera span:nth-child(n + 3):nth-child(-n + 5) {
-    display: none;
-  }
+.ficha-campos {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.4rem 1rem;
+}
+.ficha-campos dt {
+  font-weight: 600;
+  color: #555;
+}
+
+.ficha-sin-clasificar {
+  color: #999;
+  font-style: italic;
+}
+
+.btn-volver,
+.btn-clasificar,
+#btn-actualizar {
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  background: white;
+}
+
+.panel-metricas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.grupo-barras h3 {
+  margin-bottom: 0.5rem;
+}
+
+.barra-fila {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.3rem;
+  font-size: 0.85rem;
+}
+
+.barra-track {
+  background: #eee;
+  border-radius: 4px;
+  overflow: hidden;
+  height: 10px;
+}
+.barra-relleno {
+  background: #4a6cf7;
+  height: 100%;
+}
+
+.clasificar-fallback textarea {
+  width: 100%;
+  height: 140px;
 }

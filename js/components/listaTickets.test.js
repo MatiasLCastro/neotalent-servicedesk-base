@@ -14,11 +14,15 @@ test("renderiza una fila por ticket con su data-ticket-id", () => {
 });
 
 test("muestra un mensaje cuando la lista está vacía", () => {
-  assert.match(renderListaTickets([]), /No hay tickets/);
+  const html = renderListaTickets([]);
+  assert.match(html, /No hay tickets/);
 });
 
 test("escapa HTML en los campos de texto", () => {
-  const html = renderListaTickets([{ ...tickets[0], titulo: "<script>alert(1)</script>" }]);
+  const conHtml = [
+    { id: "A", estado: "abierto", titulo: "<script>alert(1)</script>", sistema_afectado: "X", zona: "Y", fecha: "2026-09-01" },
+  ];
+  const html = renderListaTickets(conHtml);
   assert.ok(!html.includes("<script>alert(1)</script>"));
   assert.match(html, /&lt;script&gt;/);
 });

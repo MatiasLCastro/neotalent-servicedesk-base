@@ -1,3 +1,11 @@
+// Duplicada intencionalmente en cada componente (ver docs/constitution.md /
+// decisión del proyecto: demasiado pequeña para justificar un módulo
+// compartido). En el navegador, ambas copias son declaraciones de función de
+// nivel superior en un <script> clásico, así que ambas terminan asignando
+// window.escaparHtml — no confíes en ese global, usa siempre la referencia
+// local de este archivo. Si editas esta función, replica el cambio en el
+// otro archivo que la define (fichaTicket.js) para que sigan siendo
+// idénticas byte a byte.
 function escaparHtml(texto) {
   return String(texto)
     .replace(/&/g, "&amp;")
@@ -15,20 +23,15 @@ function renderListaTickets(tickets) {
       (t) => `
       <div class="ticket-row" data-ticket-id="${escaparHtml(t.id)}">
         <span class="ticket-id">${escaparHtml(t.id)}</span>
+        <span class="ticket-estado ticket-estado--${escaparHtml(t.estado)}">${escaparHtml(t.estado)}</span>
         <span class="ticket-titulo">${escaparHtml(t.titulo)}</span>
-        <span class="ticket-zona">${escaparHtml(t.zona)}</span>
         <span class="ticket-sistema">${escaparHtml(t.sistema_afectado)}</span>
+        <span class="ticket-zona">${escaparHtml(t.zona)}</span>
         <span class="ticket-fecha">${escaparHtml(t.fecha)}</span>
-        <span><span class="ticket-estado ticket-estado--${escaparHtml(t.estado)}">${escaparHtml(t.estado)}</span></span>
       </div>`
     )
     .join("");
-  return `
-    <div class="lista-tickets">
-      <div class="ticket-row ticket-row--cabecera">
-        <span>ID</span><span>Título</span><span>Zona</span><span>Sistema</span><span>Fecha</span><span>Estado</span>
-      </div>${filas}
-    </div>`;
+  return `<div class="lista-tickets">${filas}</div>`;
 }
 
 if (typeof window !== "undefined") {
