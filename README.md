@@ -26,18 +26,18 @@ Los datos son inventados de cero — cero relación con clientes reales.
 
 ```
 /
-├── index.html       → placeholder, se construye en Sesión 3
+├── index.html       → construido en la Fase 3 (Sesión 3)
 ├── css/
-│   └── styles.css   → placeholder
+│   └── styles.css   → estilos de la app
 ├── js/
-│   ├── app.js       → placeholder, orquesta la carga y el pintado
-│   ├── components/  → piezas de UI reutilizables (placeholder)
-│   └── utils/       → funciones auxiliares sin estado (placeholder)
+│   ├── app.js       → orquesta la carga y el pintado
+│   ├── components/  → piezas de UI reutilizables, cada una con su test
+│   └── utils/       → funciones auxiliares sin estado, cada una con su test
 ├── data/
 │   └── tickets.json → dataset ya listo
 ├── docs/
-│   ├── spec.md       → placeholder (Fase 1)
-│   └── diseno.md      → placeholder (Fase 2)
+│   ├── spec.md       → spec de funcionalidad (Fase 1)
+│   └── diseno.md      → decisiones de diseño con Artifacts (Fase 2)
 ├── README.md
 └── CLAUDE.md
 ```
@@ -54,8 +54,11 @@ Los datos son inventados de cero — cero relación con clientes reales.
 | `README.md` | Qué es el proyecto y cómo empezar | Brief del proyecto, esta misma tabla | Es lo primero que lee cualquiera al abrir el repo — humano o Claude Code |
 | `CLAUDE.md` | Contexto del proyecto para Claude Code | Se genera en la Sesión 2 | Se genera en la Sesión 2 a partir de lo que Claude Code entienda del resto de archivos |
 
-No hay carpetas de dependencias ni de build — el proyecto es HTML/CSS/JS plano, se abre
-`index.html` directamente en el navegador, sin instalar nada.
+No hay carpetas de dependencias ni de build — el proyecto es HTML/CSS/JS plano, sin instalar
+nada. Eso sí, abrir `index.html` con doble click (URL `file://`) rompe el `fetch` de
+`data/tickets.json` en todos los navegadores modernos (origen opaco, sin CORS). Sírvelo con un
+servidor estático simple, por ejemplo `python3 -m http.server 8000` (viene con Python, no hay
+nada que instalar) y abre `http://localhost:8000`.
 
 ## Cómo empezar (Sesión 2)
 

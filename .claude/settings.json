@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh .claude/hooks/run-tests-on-edit.sh 2>/dev/null || true",
+            "statusMessage": "Running node --test on the matching test file..."
+          }
+        ]
+      }
+    ]
+  }
+}
