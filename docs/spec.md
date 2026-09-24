@@ -6,9 +6,11 @@ qué debe hacer la app, qué no, y los criterios de aceptación de cada requisit
 
 ## Resumen
 
-Una bandeja de incidencias de seguridad física con tres piezas: lista + ficha de tickets,
-clasificación de prioridad/categoría asistida por Claude Code, y un panel de métricas. Sin
-backend: HTML + CSS + JS plano sobre `data/tickets.json` (artículo 1 de la constitución).
+Una bandeja de incidencias de seguridad física con cuatro piezas: lista + ficha de tickets,
+clasificación de prioridad/categoría asistida por Claude Code, un panel de métricas, y alta de
+tickets nuevos guardados en el navegador. Sin backend: HTML + CSS + JS plano sobre
+`data/tickets.json` para los tickets del dataset y `localStorage` para los creados en el
+navegador (artículo 1 de la constitución).
 
 ## Arquitectura (decisiones ya tomadas, guían la Fase 3)
 
@@ -21,6 +23,12 @@ backend: HTML + CSS + JS plano sobre `data/tickets.json` (artículo 1 de la cons
 - `js/utils/` calcula (filtrar, agrupar por sistema/zona/estado, generar el texto del prompt
   de clasificación) sin tocar el DOM. `js/components/` recibe esos datos ya calculados y
   pinta HTML. `app.js` orquesta fetch, estado y eventos. (Artículo 4 de la constitución.)
+- Los tickets creados en el navegador (Feature 4) se leen/escriben en `localStorage` a través
+  de una función de `js/utils/` con el storage inyectado como parámetro — mismo patrón que
+  `cargarTickets(fetchImpl)` (Feature 1) usa con `fetch`, para poder testearla desde Node sin
+  un navegador real. Al iniciar y al actualizar datos, `app.js` concatena esos tickets con los
+  de `data/tickets.json` dentro de `state.tickets`: el resto de la app (filtro, ficha,
+  métricas) los trata igual que a cualquier otro ticket, sin lógica aparte.
 
 ## Feature 1 — Bandeja de tickets + ficha de detalle
 
@@ -98,12 +106,50 @@ backend: HTML + CSS + JS plano sobre `data/tickets.json` (artículo 1 de la cons
 - Dado que se actualiza `data/tickets.json` (Feature 2) y se clickea "Actualizar datos",
   cuando el panel se recalcula, entonces sus conteos reflejan el dataset recién cargado.
 
+## Feature 4 — Alta de tickets nuevos (solo en el navegador)
+
+**Requisitos**
+- La bandeja tiene un botón "Nuevo ticket".
+- Al hacer click, se muestra un formulario con los campos: título, descripción, sistema
+  afectado (uno de los 6 valores ya usados como `sistema_afectado` en el dataset, vía
+  `<select>`), zona (texto libre) y reportado por (texto libre). Los cinco son obligatorios.
+- Al enviar el formulario con todos los campos completos, la app genera el resto del registro
+  — `id` (prefijo `LOCAL-` + contador, para no chocar con los `SVD-xxxx` del dataset),
+  `estado: "abierto"` y `fecha` (la fecha actual) — y lo guarda en `localStorage`. El ticket
+  aparece de inmediato en la bandeja, sin recargar la página.
+- Los tickets guardados en `localStorage` persisten entre recargas de página, pero solo en ese
+  navegador: no hay sincronización entre dispositivos, pestañas ni servidor.
+- Un ticket creado en el navegador no se puede editar ni borrar después de guardarse (ver
+  "Fuera de alcance") ni clasificar con el flujo de Feature 2 — ese flujo asume que Claude
+  Code edita `data/tickets.json` directamente, y estos tickets no viven ahí. Su ficha muestra
+  "Sin clasificar" de forma permanente y no ofrece el botón "Clasificar con Claude Code".
+
+**Criterios de aceptación**
+- Dado el formulario "Nuevo ticket" completo y válido, cuando se envía, entonces aparece un
+  ticket nuevo en la bandeja con `estado: "abierto"`, sin recargar la página y sin modificar
+  `data/tickets.json`.
+- Dado un ticket creado en el navegador, cuando se recarga la página (F5), entonces el ticket
+  sigue apareciendo en la bandeja, leído desde `localStorage`.
+- Dado un ticket creado en el navegador, cuando se abre su ficha, entonces se muestra "Sin
+  clasificar" y no aparece el botón "Clasificar con Claude Code".
+- Dado el formulario con algún campo obligatorio vacío, cuando se intenta enviar, entonces el
+  ticket no se crea y la app indica qué campo falta.
+- Dado un ticket creado en el navegador, cuando se clickea "Actualizar datos" (Feature 2, que
+  vuelve a hacer `fetch` de `data/tickets.json`), entonces el ticket sigue apareciendo en la
+  bandeja junto con los del dataset.
+
 ## Fuera de alcance
 
 Explícito, por el artículo 5 de la constitución — nada de esto entra sin reescribir primero
 este documento:
 
-- Edición manual de tickets o creación de tickets nuevos desde la UI.
+- Edición o borrado de tickets existentes desde la UI — la Fase 1 solo agrega altas nuevas
+  (Feature 4), nunca edición ni borrado, ni siquiera de los tickets creados en el navegador.
+- Clasificación de prioridad/categoría para tickets creados en el navegador — Feature 2 solo
+  aplica a tickets de `data/tickets.json` (ver Feature 4).
+- Sincronización entre dispositivos o pestañas de los tickets creados en el navegador, y
+  cualquier backend o base de datos para guardarlos — quedan solo en el `localStorage` de ese
+  navegador (artículo 1 de la constitución).
 - Autenticación o control de acceso.
 - Backend, servidor o base de datos — todo corre en el navegador sobre archivos estáticos.
 - Persistencia del filtro o de la vista activa entre recargas de página.

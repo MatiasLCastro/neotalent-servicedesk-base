@@ -27,10 +27,12 @@ ningún archivo contiene una API key.
 **Verificable:** `grep -r "tickets.json" js/components/` no da resultados;
 `grep -r "document\." js/utils/` no da resultados.
 
-### 5. Alcance cerrado a 3 features
-Lista de tickets + ficha, clasificación de prioridad/categoría, panel de métricas. Nada más
-entra en `spec.md` sin pasar antes por este documento.
-**Verificable:** cada requisito de `spec.md` se puede etiquetar con una de las 3 features,
+### 5. Alcance cerrado a 4 features
+Lista de tickets + ficha, clasificación de prioridad/categoría, panel de métricas, alta de
+tickets nuevos guardados en `localStorage` (sin edición ni borrado de tickets existentes, y
+sin escribir nunca en `data/tickets.json`). Nada más entra en `spec.md` sin pasar antes por
+este documento.
+**Verificable:** cada requisito de `spec.md` se puede etiquetar con una de las 4 features,
 o está marcado explícitamente "fuera de alcance".
 
 ### 6. Todo requisito tiene criterio de aceptación comprobable
@@ -49,4 +51,6 @@ contenido de ejemplo — nunca cifras o textos inventados que no salgan del data
 - Cambios a este documento requieren decisión explícita del autor del proyecto, no de Claude
   actuando solo.
 - Ante conflicto entre `spec.md`/`diseno.md` y este documento, gana este documento.
+- Versión: 1.1.0 · Fecha: 2026-09-24 — artículo 5 amplía el alcance a alta de tickets
+  nuevos por localStorage, decisión explícita del autor del proyecto (ver spec.md Feature 4).
 - Versión: 1.0.0 · Fecha: 2026-09-22

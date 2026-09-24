@@ -11,6 +11,26 @@
   --baliza: #f2b705;
   --error-fondo: #fbe3e1;
   --error-tinta: #8c1d18;
+
+  /* Color por estado: ámbar = sigue abierto, verde = resuelto (DONE).
+     Se usan tanto en la insignia del estado como en la raya lateral de
+     cada fila y en las barras "Por estado" del panel de métricas. */
+  --raya-abierto: #d99a00;
+  --estado-abierto-bg: #fce8b4;
+  --estado-abierto-fg: #7a4e00;
+  --raya-cerrado: #2f9e5b;
+  --estado-cerrado-bg: #dcf5e4;
+  --estado-cerrado-fg: #1b7a43;
+
+  --prioridad-critica-bg: #fbe2e1;
+  --prioridad-critica-fg: #8c1d18;
+  --prioridad-alta-bg: #fce8b4;
+  --prioridad-alta-fg: #7a4e00;
+  --prioridad-media-bg: #e1ecfa;
+  --prioridad-media-fg: #1f4e8c;
+  --prioridad-baja-bg: #e9edf2;
+  --prioridad-baja-fg: var(--tinta-suave);
+
   --condensada: "Barlow Condensed", "Arial Narrow", sans-serif;
   --texto: "Barlow", system-ui, sans-serif;
 }
@@ -91,10 +111,16 @@ body {
   color: var(--hoja);
   background: var(--tinta);
   border: 2px solid var(--tinta);
+  transition: background-color 0.15s ease, transform 0.1s ease;
 }
 #btn-actualizar:hover,
 .btn-clasificar:hover {
   background: #22405f;
+  transform: translateY(-1px);
+}
+#btn-actualizar:active,
+.btn-clasificar:active {
+  transform: translateY(0);
 }
 
 .error-mensaje {
@@ -113,6 +139,7 @@ body {
   background: var(--hoja);
   border: 1px solid var(--linea);
   border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(20, 38, 58, 0.07);
   overflow: hidden;
 }
 
@@ -129,11 +156,17 @@ body {
 .ticket-row:last-child {
   border-bottom: 0;
 }
+.ticket-row {
+  transition: background-color 0.12s ease;
+}
 .ticket-row:hover {
   background: #eef6fc;
 }
 .ticket-row:has(.ticket-estado--abierto) {
-  border-left-color: var(--baliza);
+  border-left-color: var(--raya-abierto);
+}
+.ticket-row:has(.ticket-estado--cerrado) {
+  border-left-color: var(--raya-cerrado);
 }
 
 .ticket-id {
@@ -161,22 +194,31 @@ body {
 
 .ticket-estado {
   justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   font-size: 0.8rem;
   font-weight: 600;
   line-height: 1;
-  padding: 0.3rem 0.6rem;
+  padding: 0.3rem 0.65rem;
   border-radius: 999px;
+  text-transform: capitalize;
 }
-.ticket-estado::first-letter {
-  text-transform: uppercase;
+.ticket-estado::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  flex: none;
+  border-radius: 50%;
+  background: currentColor;
 }
 .ticket-estado--abierto {
-  background: #fdefc0;
-  color: var(--tinta);
+  background: var(--estado-abierto-bg);
+  color: var(--estado-abierto-fg);
 }
 .ticket-estado--cerrado {
-  color: var(--tinta-suave);
-  border: 1px solid var(--linea);
+  background: var(--estado-cerrado-bg);
+  color: var(--estado-cerrado-fg);
 }
 
 .lista-vacia {
@@ -230,6 +272,12 @@ body {
   height: 100%;
   background: var(--tinta);
 }
+.barra-relleno--abierto {
+  background: var(--raya-abierto);
+}
+.barra-relleno--cerrado {
+  background: var(--raya-cerrado);
+}
 
 /* Ficha */
 
@@ -239,6 +287,7 @@ body {
   background: var(--hoja);
   border: 1px solid var(--linea);
   border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(20, 38, 58, 0.07);
 }
 
 .btn-volver {
@@ -288,6 +337,78 @@ body {
 .ficha-sin-clasificar {
   color: var(--tinta-suave);
   font-style: italic;
+}
+
+.ficha-prioridad {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+}
+.ficha-prioridad--critica {
+  background: var(--prioridad-critica-bg);
+  color: var(--prioridad-critica-fg);
+}
+.ficha-prioridad--alta {
+  background: var(--prioridad-alta-bg);
+  color: var(--prioridad-alta-fg);
+}
+.ficha-prioridad--media {
+  background: var(--prioridad-media-bg);
+  color: var(--prioridad-media-fg);
+}
+.ficha-prioridad--baja {
+  background: var(--prioridad-baja-bg);
+  color: var(--prioridad-baja-fg);
+}
+
+.campo-formulario {
+  margin-bottom: 1.25rem;
+}
+.campo-formulario label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.875rem;
+  color: var(--tinta-suave);
+}
+.campo-formulario input,
+.campo-formulario textarea,
+.campo-formulario select {
+  width: 100%;
+  font: inherit;
+  font-size: 0.95rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--linea);
+  border-radius: 4px;
+  background: var(--hoja);
+  color: var(--tinta);
+}
+.campo-formulario textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.acciones-formulario {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+.acciones-formulario .btn-volver {
+  padding: 0.55rem 1rem;
+  margin-bottom: 0;
+  border: 2px solid var(--linea);
+  border-radius: 4px;
+}
+
+.ficha-categoria {
+  display: inline-block;
+  font-size: 0.8rem;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid var(--linea);
+  border-radius: 999px;
+  color: var(--tinta-suave);
 }
 
 .clasificar-fallback {

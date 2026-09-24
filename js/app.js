@@ -14,6 +14,8 @@ const el = {
   vistaBandeja: document.getElementById("vista-bandeja"),
   vistaFicha: document.getElementById("vista-ficha"),
   fichaContenido: document.getElementById("ficha-contenido"),
+  vistaFormulario: document.getElementById("vista-formulario"),
+  formularioContenido: document.getElementById("formulario-contenido"),
 };
 
 function mostrarError(mensaje) {
@@ -54,8 +56,38 @@ function volverABandeja() {
   state.vista = "bandeja";
   state.ticketSeleccionado = null;
   el.vistaFicha.hidden = true;
+  el.vistaFormulario.hidden = true;
   el.vistaBandeja.hidden = false;
 }
+
+function mostrarFormulario() {
+  state.vista = "formulario";
+  el.formularioContenido.innerHTML = Components.renderFormularioTicket(Utils.CATEGORIAS);
+  el.vistaBandeja.hidden = true;
+  el.vistaFormulario.hidden = false;
+}
+
+document.getElementById("btn-nuevo-ticket").addEventListener("click", mostrarFormulario);
+
+el.formularioContenido.addEventListener("click", (evento) => {
+  if (evento.target.closest(".btn-volver")) volverABandeja();
+});
+
+el.formularioContenido.addEventListener("submit", (evento) => {
+  evento.preventDefault();
+  const datos = Object.fromEntries(new FormData(evento.target).entries());
+  const hoy = new Date().toISOString().slice(0, 10);
+  const resultado = Utils.crearTicketLocal(datos, localStorage, hoy);
+  if (!resultado.ok) {
+    const errorForm = document.getElementById("form-error");
+    errorForm.textContent = resultado.error;
+    errorForm.hidden = false;
+    return;
+  }
+  state.tickets = [...state.tickets, resultado.ticket];
+  volverABandeja();
+  renderBandeja();
+});
 
 el.listaTickets.addEventListener("click", (evento) => {
   const fila = evento.target.closest(".ticket-row");
@@ -101,7 +133,7 @@ async function actualizarDatos() {
     return;
   }
   ocultarError();
-  state.tickets = resultado.tickets;
+  state.tickets = resultado.tickets.concat(Utils.leerTicketsLocales(localStorage));
   renderBandeja();
   if (state.vista === "ficha" && state.ticketSeleccionado) {
     const sigueExistiendo = state.tickets.some((t) => t.id === state.ticketSeleccionado);
@@ -123,7 +155,7 @@ async function iniciar() {
     return;
   }
   ocultarError();
-  state.tickets = resultado.tickets;
+  state.tickets = resultado.tickets.concat(Utils.leerTicketsLocales(localStorage));
   renderBandeja();
 }
 
