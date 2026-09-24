@@ -14,13 +14,18 @@ function escaparHtml(texto) {
     .replace(/"/g, "&quot;");
 }
 
+// Mapea el valor exacto de prioridad (Crítica/Alta/Media/Baja, ver
+// docs/spec.md Feature 2) a la clase que la colorea — ver css/styles.css.
+const PRIORIDAD_SLUG = { Crítica: "critica", Alta: "alta", Media: "media", Baja: "baja" };
+
 function renderFichaTicket(ticket) {
   const prioridad = ticket.prioridad
-    ? `<span class="ficha-prioridad">${escaparHtml(ticket.prioridad)}</span>`
+    ? `<span class="ficha-prioridad ficha-prioridad--${PRIORIDAD_SLUG[ticket.prioridad] || ""}">${escaparHtml(ticket.prioridad)}</span>`
     : '<span class="ficha-sin-clasificar">Sin clasificar</span>';
   const categoria = ticket.categoria
     ? `<span class="ficha-categoria">${escaparHtml(ticket.categoria)}</span>`
     : '<span class="ficha-sin-clasificar">Sin clasificar</span>';
+  const estado = `<span class="ticket-estado ticket-estado--${escaparHtml(ticket.estado)}">${ticket.estado === "cerrado" ? "DONE" : escaparHtml(ticket.estado)}</span>`;
   const botonClasificar = ticket.prioridad
     ? ""
     : `<button class="btn-clasificar" data-ticket-id="${escaparHtml(ticket.id)}">Clasificar con Claude Code</button>`;
@@ -35,7 +40,7 @@ function renderFichaTicket(ticket) {
         <dt>Zona</dt><dd>${escaparHtml(ticket.zona)}</dd>
         <dt>Reportado por</dt><dd>${escaparHtml(ticket.reportado_por)}</dd>
         <dt>Fecha</dt><dd>${escaparHtml(ticket.fecha)}</dd>
-        <dt>Estado</dt><dd>${escaparHtml(ticket.estado)}</dd>
+        <dt>Estado</dt><dd>${estado}</dd>
         <dt>Prioridad</dt><dd>${prioridad}</dd>
         <dt>Categoría</dt><dd>${categoria}</dd>
       </dl>

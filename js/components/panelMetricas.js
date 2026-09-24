@@ -14,16 +14,20 @@ function escaparHtml(texto) {
     .replace(/"/g, "&quot;");
 }
 
-function renderGrupoBarras(titulo, conteo) {
+// colorPorEtiqueta es opcional: solo el grupo "Por estado" lo usa, para que
+// la barra "abierto" salga en ámbar y "cerrado" en verde — el mismo color
+// que la insignia de estado en la bandeja (ver css/styles.css).
+function renderGrupoBarras(titulo, conteo, colorPorEtiqueta) {
   const entradas = Object.entries(conteo).sort((a, b) => b[1] - a[1]);
   const max = entradas.length ? Math.max(...entradas.map(([, n]) => n)) : 0;
   const barras = entradas
     .map(([etiqueta, n]) => {
       const ancho = max ? Math.round((n / max) * 100) : 0;
+      const color = colorPorEtiqueta && colorPorEtiqueta[etiqueta] ? ` barra-relleno--${colorPorEtiqueta[etiqueta]}` : "";
       return `
         <div class="barra-fila">
           <span class="barra-etiqueta">${escaparHtml(etiqueta)} (${escaparHtml(n)})</span>
-          <div class="barra-track"><div class="barra-relleno" style="width: ${ancho}%"></div></div>
+          <div class="barra-track"><div class="barra-relleno${color}" style="width: ${ancho}%"></div></div>
         </div>`;
     })
     .join("");
@@ -35,7 +39,7 @@ function renderPanelMetricas({ porSistema, porZona, porEstado }) {
     <div class="panel-metricas">
       ${renderGrupoBarras("Por sistema afectado", porSistema)}
       ${renderGrupoBarras("Por zona", porZona)}
-      ${renderGrupoBarras("Por estado", porEstado)}
+      ${renderGrupoBarras("Por estado", porEstado, { abierto: "abierto", cerrado: "cerrado" })}
     </div>`;
 }
 

@@ -23,7 +23,7 @@ function renderListaTickets(tickets) {
       (t) => `
       <div class="ticket-row" data-ticket-id="${escaparHtml(t.id)}">
         <span class="ticket-id">${escaparHtml(t.id)}</span>
-        <span class="ticket-estado ticket-estado--${escaparHtml(t.estado)}">${escaparHtml(t.estado)}</span>
+        <span class="ticket-estado ticket-estado--${escaparHtml(t.estado)}">${t.estado === "cerrado" ? "DONE" : escaparHtml(t.estado)}</span>
         <span class="ticket-titulo">${escaparHtml(t.titulo)}</span>
         <span class="ticket-sistema">${escaparHtml(t.sistema_afectado)}</span>
         <span class="ticket-zona">${escaparHtml(t.zona)}</span>
