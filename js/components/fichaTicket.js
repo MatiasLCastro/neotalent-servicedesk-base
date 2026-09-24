@@ -26,7 +26,11 @@ function renderFichaTicket(ticket) {
     ? `<span class="ficha-categoria">${escaparHtml(ticket.categoria)}</span>`
     : '<span class="ficha-sin-clasificar">Sin clasificar</span>';
   const estado = `<span class="ticket-estado ticket-estado--${escaparHtml(ticket.estado)}">${ticket.estado === "cerrado" ? "DONE" : escaparHtml(ticket.estado)}</span>`;
-  const botonClasificar = ticket.prioridad
+  // Los tickets creados en el navegador (id "LOCAL-…", spec Feature 4) no
+  // viven en data/tickets.json, así que el flujo de clasificación (Feature
+  // 2, que edita ese archivo) no les aplica: nunca se les ofrece el botón.
+  const esLocal = ticket.id.startsWith("LOCAL-");
+  const botonClasificar = ticket.prioridad || esLocal
     ? ""
     : `<button class="btn-clasificar" data-ticket-id="${escaparHtml(ticket.id)}">Clasificar con Claude Code</button>`;
 

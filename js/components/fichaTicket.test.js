@@ -30,6 +30,11 @@ test("oculta el botón Clasificar cuando el ticket ya tiene prioridad", () => {
   assert.ok(!renderFichaTicket(ticketClasificado).includes("btn-clasificar"));
 });
 
+test("oculta el botón Clasificar para un ticket creado en el navegador (id LOCAL-)", () => {
+  const ticketLocal = { ...ticketSinClasificar, id: "LOCAL-1" };
+  assert.ok(!renderFichaTicket(ticketLocal).includes("btn-clasificar"));
+});
+
 test("muestra los 8 campos base del ticket", () => {
   const html = renderFichaTicket(ticketClasificado);
   for (const valor of [
