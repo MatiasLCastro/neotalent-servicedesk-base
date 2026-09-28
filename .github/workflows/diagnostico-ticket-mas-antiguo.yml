@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Ejecutar Claude Code
-        uses: anthropics/claude-code-base-action@beta
+        uses: anthropics/claude-code-base-action@7456abb892dcd39cd63025550e1726fe65b7c5d2 # main @ 2026-09-25, Claude Code 2.1.283 (the @beta tag is stale since v0.0.63, Aug 2025)
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           claude_args: '--model claude-sonnet-5 --allowedTools "Read,Write" --max-turns 5'
