@@ -1,0 +1,55 @@
+name: Diagnóstico de ticket más antiguo sin clasificar
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  diagnosticar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ejecutar Claude Code
+        uses: anthropics/claude-code-base-action@beta
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          claude_args: '--allowedTools "Read,Write" --max-turns 5'
+          prompt: |
+            Lee el archivo data/tickets.json del Mini Service Desk.
+
+            Encuentra el ticket sin clasificar más antiguo: el que no tiene
+            los campos `prioridad` ni `categoria`, con la `fecha` (formato
+            AAAA-MM-DD) más antigua de todos los tickets sin clasificar. Si
+            hay empate en fecha, usa el que aparece primero en el archivo.
+
+            No modifiques data/tickets.json bajo ningún concepto.
+
+            Escribe un diagnóstico de ese ticket en un archivo nuevo dentro
+            de docs/, con nombre docs/diagnostico-<id>.md (sustituye <id>
+            por el `id` real del ticket, p. ej. docs/diagnostico-SVD-4100.md).
+            El archivo debe incluir:
+            - Los datos del ticket (id, titulo, descripcion,
+              sistema_afectado, reportado_por, zona, fecha, estado).
+            - Un diagnóstico breve del problema.
+            - Una prioridad sugerida (una de: Crítica, Alta, Media, Baja) y
+              una categoría sugerida (una de: Control de accesos, SailPoint
+              (identidades), Centralita de guardia, Central de alarmas, App
+              de rondas, CCTV / videovigilancia), cada una con una
+              justificación de una o dos frases.
+
+            No crees ni modifiques ningún otro archivo.
+
+      - name: Commit del diagnóstico
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/
+          if git diff --cached --quiet; then
+            echo "Nada que commitear"
+          else
+            git commit -m "docs: diagnóstico automático del ticket más antiguo sin clasificar"
+            git push
+          fi
