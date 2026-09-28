@@ -1,0 +1,10 @@
+.git
+.gitignore
+.claude
+.agents
+docs
+README.md
+CLAUDE.md
+eslint.config.mjs
+skills-lock.json
+*.test.js
